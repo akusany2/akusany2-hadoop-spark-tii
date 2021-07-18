@@ -8,5 +8,5 @@ class App:
         self.df = spark.read.options(header='True', inferSchema='True').csv(config.hdfs_url+config.hdfs_path)
 
     def problem1(self):
-        self.df.groupBy('classname', 'day', 'month', 'year').count().show()
+        self.df.groupBy('classname', 'day', 'month', 'year').count().sort('year').show()
     

@@ -2,9 +2,13 @@ import requests
 import os
 import pydoop.hdfs as hdfs
 import config
+import pandas as pd
+import ssl
+
 
 class GetCSV:
-    def __init__(self):
+
+    def __init__(self, spark):
         for i in range(0, 7):
             self.get_csv(
                 "https://data.tii.ie/Datasets/TrafficCountData/2019/04/{date:02d}/per-vehicle-records-2019-04-{date:02d}.csv".format(
@@ -32,6 +36,8 @@ class GetCSV:
 
     def get_csv(self, url, name):
         if not self.check_files(name):
+            ssl._create_default_https_context = ssl._create_unverified_context
+
             file_name = name + ".csv"
             file_path = "./data/" + file_name
             headers = {
@@ -39,12 +45,14 @@ class GetCSV:
             }
             if not os.path.isfile(file_path):
                 print("Downloading: {}".format(name))
-                req = requests.get(url, headers=headers)
-                url_content = req.content
-                csv_file = open(file_path, "wb")
+                # req = requests.get(url, headers=headers)
+                # url_content = req.content
+                # csv_file = open(file_path, "wb")
 
-                csv_file.write(url_content)
-                csv_file.close()
+                # csv_file.write(url_content)
+                # csv_file.close()
+                csv = pd.read_csv(url, header=0)
+                csv.to_csv(file_path, index=False)
 
             print("Copying to HDFS: {}".format(name))
 

@@ -28,6 +28,10 @@ class App:
     def __init__(self, spark):
         self.df = spark.read.options(header='True', inferSchema='True').schema(self.tii_schema).csv(config.hdfs_url+config.hdfs_path)
 
+    # Calculate the usage of Irish road network in terms of daily count average grouped by vehicle category. Report these percentages for each week separately.
     def problem1(self):
         self.df.groupBy('classname', 'day', 'month', 'year').count().sort('year').show()
     
+    # Identify the highest daily count site - show the date and total number of vehicles counts.
+    def problem2(self):
+        self.df.groupBy('classname', 'day', 'month', 'year').count().sort('year').show()

@@ -1,4 +1,5 @@
 import requests
+import shutil
 import os
 import pydoop.hdfs as hdfs
 import config
@@ -26,6 +27,7 @@ class GetCSV:
 
     def check_files(self, name):
         if not hdfs.path.isdir(config.hdfs_path):
+            print('HDFS folder create')
             hdfs.mkdir(config.hdfs_path)
 
         if not os.path.isdir('./data'):
@@ -45,14 +47,10 @@ class GetCSV:
             }
             if not os.path.isfile(file_path):
                 print("Downloading: {}".format(name))
-                # req = requests.get(url, headers=headers)
-                # url_content = req.content
-                # csv_file = open(file_path, "wb")
-
-                # csv_file.write(url_content)
-                # csv_file.close()
-                csv = pd.read_csv(url, header=0)
-                csv.to_csv(file_path, index=False)
+                
+                with requests.get(url, stream=True) as r:
+                    with open(file_path, 'wb') as f:
+                        shutil.copyfileobj(r.raw, f)
 
             print("Copying to HDFS: {}".format(name))
 

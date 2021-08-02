@@ -13,8 +13,11 @@ pydoop.hdfs.hdfs(host='ec2-18-205-237-120.compute-1.amazonaws.com', port=9870, u
 spark = SparkSession.builder.appName('SCPTii').getOrCreate()
 
 
-# get_csv.GetCSV(spark)
+get_csv.GetCSV(spark)
 
 solution = app.App(spark)
 
-solution.problem1()
+# solution.problem1()
+# solution.problem2()
+# solution.problem3()
+

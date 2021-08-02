@@ -10,7 +10,9 @@ import ssl
 class GetCSV:
 
     def __init__(self, spark):
-        for i in range(0, 7):
+
+        self.clean_csv()
+        for i in range(0, 1):
             self.get_csv(
                 "https://data.tii.ie/Datasets/TrafficCountData/2019/04/{date:02d}/per-vehicle-records-2019-04-{date:02d}.csv".format(
                     date=i + 8
@@ -27,7 +29,6 @@ class GetCSV:
 
     def check_files(self, name):
         if not hdfs.path.isdir(config.hdfs_path):
-            print('HDFS folder create')
             hdfs.mkdir(config.hdfs_path)
 
         if not os.path.isdir('./data'):
@@ -60,3 +61,6 @@ class GetCSV:
 
         else:
             print("File {} already exists".format(name))
+    
+    def clean_csv(self):
+        hdfs.rm(config.hdfs_path)

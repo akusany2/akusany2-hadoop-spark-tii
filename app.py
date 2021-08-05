@@ -4,6 +4,7 @@ from pyspark.sql.types import StructType,StructField, StringType, IntegerType, F
 import config
 
 class App:
+    # Defining schema for tii dataset CSV
     tii_schema = StructType([
         StructField("cosit",IntegerType(),True),
         StructField("year",IntegerType(),True),
@@ -25,9 +26,13 @@ class App:
         StructField("gap",IntegerType(),True),
         StructField("speed",FloatType(),True)
     ])
+
+
     def __init__(self, spark):
         self.spark =  spark
         self.df = spark.read.options(header='True', inferSchema='True').schema(self.tii_schema).csv(config.hdfs_url+config.hdfs_path)
+
+        # Defining table view, to be used in SQL queries
         self.df.registerTempTable("tii_table")
 
     # Calculate the usage of Irish road network in terms of daily count average grouped by vehicle category. Report these percentages for each week separately.
@@ -36,7 +41,7 @@ class App:
         (c.per_class_count/c.per_day_class_count) * 100 AS average 
         FROM
         (SELECT classname, COUNT(classname) AS per_class_count, 
-        SUM(COUNT(classname)) OVER (PARTITION BY day) AS per_day_class_count,
+        SUM(COUNT(classname)) OVER (PARTITION BY day, year) AS per_day_class_count,
         day, month, year 
         FROM tii_table 
         WHERE classname IS NOT null

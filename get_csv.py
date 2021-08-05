@@ -11,8 +11,8 @@ class GetCSV:
 
     def __init__(self, spark):
 
-        self.clean_csv()
-        for i in range(0, 1):
+        # self.clean_csv()
+        for i in range(0, 7):
             self.get_csv(
                 "https://data.tii.ie/Datasets/TrafficCountData/2019/04/{date:02d}/per-vehicle-records-2019-04-{date:02d}.csv".format(
                     date=i + 8

@@ -60,7 +60,7 @@ class App:
 
     # Which sites have seen a significant amount of traffic reduction due to lockdown (list top 10)?
     def problem3(self):
-        self.spark.sql("""SELECT w1.cosit, abs(((w1.cosit_count - w2.cosit_count) /w1.cosit_count)*100) AS traffic_diff_percent FROM (SELECT cosit, COUNT(cosit) AS cosit_count FROM tii_table WHERE year=2019 GROUP BY cosit) AS w1 
+        self.spark.sql("""SELECT w1.cosit, ((w1.cosit_count - w2.cosit_count) /w1.cosit_count)*100 AS traffic_diff_percent FROM (SELECT cosit, COUNT(cosit) AS cosit_count FROM tii_table WHERE year=2019 GROUP BY cosit) AS w1 
         LEFT JOIN 
         (SELECT cosit, COUNT(cosit) AS cosit_count FROM tii_table WHERE year=2020 GROUP BY cosit) AS w2 
         ON (w1.cosit = w2.cosit) ORDER BY traffic_diff_percent DESC LIMIT 10;""").show()
